@@ -26,7 +26,7 @@ The fork-based workflow is used for contributing to organization repositories be
 
 ### 1. Fork the Repository
 
-1. Navigate to the organization repository: `https://github.com/codesphere-dev/web-template`
+1. Navigate to the [organization repository](https://github.com/codesphere-dev/web-template)
 2. Click the **Fork** button in the top-right corner
 3. Select your personal account as the destination
 4. Wait for GitHub to create your fork
@@ -133,8 +133,7 @@ Testing: Describe tests added or N/A"
 4. **Push to your fork**:
 
 ```bash
-# Example: git push origin feat/#42-add-user-authentication
-git push origin feat/#issue_id-issue-title
+git push origin feat/#42-add-user-authentication
 ```
 
 Note: You're pushing to `origin` (your fork), not `upstream` (organization repo).
