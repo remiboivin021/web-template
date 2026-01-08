@@ -1,0 +1,94 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Component Diagram for Order Service
+
+Container(apiGateway, "API Gateway", "Kong", "Routes requests to services")
+
+Container_Boundary(orderService, "Order Service") {
+    ' Controllers/API Layer
+    Component(orderController, "Order Controller", "Express Router", "Handles HTTP requests for orders")
+    Component(cartController, "Cart Controller", "Express Router", "Handles shopping cart operations")
+    
+    ' Business Logic Layer
+    Component(orderManager, "Order Manager", "Service", "Orchestrates order creation and processing")
+    Component(cartManager, "Cart Manager", "Service", "Manages shopping cart logic")
+    Component(pricingService, "Pricing Service", "Service", "Calculates prices, discounts, taxes")
+    Component(inventoryService, "Inventory Service", "Service", "Checks and reserves inventory")
+    
+    ' Data Access Layer
+    Component(orderRepository, "Order Repository", "Repository", "Provides data access for orders")
+    Component(cartRepository, "Cart Repository", "Repository", "Provides data access for carts")
+    
+    ' Integration Layer
+    Component(paymentAdapter, "Payment Adapter", "Adapter", "Integrates with payment service")
+    Component(shippingAdapter, "Shipping Adapter", "Adapter", "Integrates with shipping service")
+    Component(emailAdapter, "Email Adapter", "Adapter", "Sends email notifications")
+    
+    ' Event Layer
+    Component(eventPublisher, "Event Publisher", "Publisher", "Publishes domain events")
+    
+    ' Cross-Cutting
+    Component(validator, "Request Validator", "Middleware", "Validates incoming requests")
+    Component(authMiddleware, "Auth Middleware", "Middleware", "Verifies authentication")
+    Component(logger, "Logger", "Utility", "Logs operations and errors")
+}
+
+ContainerDb(orderDb, "Order Database", "PostgreSQL", "Stores order data")
+Container(cache, "Cache", "Redis", "Caches frequently accessed data")
+Container(messageQueue, "Message Queue", "RabbitMQ", "Event bus for async communication")
+
+Container(paymentService, "Payment Service", "Microservice", "Processes payments")
+System_Ext(shippingService, "Shipping Service", "External API")
+System_Ext(emailService, "Email Service", "SendGrid")
+
+' API Gateway to Controllers
+Rel(apiGateway, authMiddleware, "Sends requests", "HTTP/JSON")
+Rel(authMiddleware, orderController, "Forwards authenticated requests")
+Rel(authMiddleware, cartController, "Forwards authenticated requests")
+
+' Controllers to Validators
+Rel(orderController, validator, "Validates input")
+Rel(cartController, validator, "Validates input")
+
+' Controllers to Services
+Rel(orderController, orderManager, "Uses")
+Rel(cartController, cartManager, "Uses")
+
+' Service Layer interactions
+Rel(orderManager, pricingService, "Calculates totals")
+Rel(orderManager, inventoryService, "Checks availability")
+Rel(orderManager, cartManager, "Retrieves cart data")
+Rel(orderManager, orderRepository, "Persists orders")
+Rel(cartManager, cartRepository, "Persists carts")
+
+' Service to Adapters
+Rel(orderManager, paymentAdapter, "Processes payment")
+Rel(orderManager, shippingAdapter, "Creates shipment")
+Rel(orderManager, emailAdapter, "Sends confirmation")
+
+' Event Publishing
+Rel(orderManager, eventPublisher, "Publishes events")
+Rel(eventPublisher, messageQueue, "Sends events", "AMQP")
+
+' Repository to Database
+Rel(orderRepository, orderDb, "Reads/Writes", "SQL")
+Rel(cartRepository, orderDb, "Reads/Writes", "SQL")
+
+' Caching
+Rel(orderRepository, cache, "Caches results", "Redis Protocol")
+Rel(cartRepository, cache, "Caches carts", "Redis Protocol")
+
+' External Integrations
+Rel(paymentAdapter, paymentService, "Calls payment API", "HTTP/REST")
+Rel(shippingAdapter, shippingService, "Creates shipment", "HTTPS/REST")
+Rel(emailAdapter, emailService, "Sends email", "HTTPS/REST")
+
+' Logging
+Rel(orderController, logger, "Logs requests")
+Rel(orderManager, logger, "Logs operations")
+Rel(paymentAdapter, logger, "Logs transactions")
+
+@enduml

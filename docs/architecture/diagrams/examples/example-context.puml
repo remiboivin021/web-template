@@ -1,0 +1,38 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+' Uncomment the following line to use a different sprite library
+' !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+' !include DEVICONS/react.puml
+
+LAYOUT_WITH_LEGEND()
+
+title System Context Diagram for E-Commerce Platform
+
+Person(customer, "Customer", "A customer who wants to purchase products online")
+Person(admin, "Administrator", "Internal staff member who manages the platform")
+Person(vendor, "Vendor", "Third-party seller who lists products")
+
+System(ecommercePlatform, "E-Commerce Platform", "Allows customers to browse, search, and purchase products online")
+
+System_Ext(paymentGateway, "Payment Gateway", "Third-party payment processor (Stripe, PayPal)")
+System_Ext(shippingService, "Shipping Service", "Handles order fulfillment and tracking")
+System_Ext(emailService, "Email Service", "Sends transactional emails to users")
+System_Ext(analyticsSystem, "Analytics System", "Collects and analyzes user behavior data")
+
+Rel(customer, ecommercePlatform, "Browses products, places orders", "HTTPS")
+Rel(admin, ecommercePlatform, "Manages catalog, processes orders", "HTTPS")
+Rel(vendor, ecommercePlatform, "Lists products, manages inventory", "HTTPS")
+
+Rel(ecommercePlatform, paymentGateway, "Processes payments", "HTTPS/REST API")
+Rel(ecommercePlatform, shippingService, "Creates shipments, tracks packages", "HTTPS/REST API")
+Rel(ecommercePlatform, emailService, "Sends order confirmations, notifications", "SMTP/REST API")
+Rel(ecommercePlatform, analyticsSystem, "Sends user events and metrics", "HTTPS/JSON")
+
+Rel(paymentGateway, customer, "Sends payment confirmations", "Email")
+Rel(shippingService, customer, "Provides tracking updates", "Email/SMS")
+Rel(emailService, customer, "Delivers emails", "SMTP")
+Rel(emailService, admin, "Sends admin notifications", "SMTP")
+Rel(emailService, vendor, "Sends vendor notifications", "SMTP")
+
+@enduml
