@@ -6,14 +6,14 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install all dependencies (including dev dependencies for build)
+RUN npm install
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN ./node_modules/.bin/tsc && ./node_modules/.bin/vite build
 
 # Production stage
 FROM node:20-alpine AS production
