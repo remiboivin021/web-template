@@ -77,7 +77,7 @@ Response:
 {
   "status": "healthy",
   "database": "connected",
-  "timestamp": "2026-01-08T05:56:00.000Z"
+  "timestamp": "2024-01-08T10:30:00.000Z"
 }
 ```
 

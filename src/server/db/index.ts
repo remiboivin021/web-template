@@ -20,7 +20,8 @@ pool.on('connect', () => {
 
 pool.on('error', (err) => {
   console.error('❌ Unexpected error on idle client', err)
-  process.exit(-1)
+  // Graceful error handling - log and notify, but don't exit immediately
+  // In production, you might want to trigger alerting here
 })
 
 export const testConnection = async (): Promise<boolean> => {

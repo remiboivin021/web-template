@@ -7,12 +7,15 @@ const PORT = process.env.PORT ?? 3001
 // Middleware
 app.use(express.json())
 
-// CORS for development
-app.use((_req: Request, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  next()
-})
+// CORS for development (restrict in production)
+if (process.env.NODE_ENV !== 'production') {
+  app.use((_req: Request, res: Response, next: NextFunction) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    next()
+  })
+}
 
 // Routes
 app.use('/api/health', healthRouter)
