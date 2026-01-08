@@ -1,10 +1,10 @@
 site_name: Web Template Documentation
-site_description: Documentation for TypeScript web application template with PostgreSQL
+site_description: Documentation for web application template
 site_author: Web Template Team
-site_url: https://github.com/remiboivin021/web-template
+site_url: https://github.com/codesphere-dev/web-template
 
-repo_name: remiboivin021/web-template
-repo_url: https://github.com/remiboivin021/web-template
+repo_name: codesphere-dev/web-template
+repo_url: https://github.com/codesphere-dev/web-template
 
 theme:
   name: material
@@ -55,11 +55,3 @@ nav:
       - Installation: getting-started/installation.md
       - Quick Start: getting-started/quick-start.md
       - Configuration: getting-started/configuration.md
-  - Development:
-      - Architecture: development/architecture.md
-      - Database: development/database.md
-      - API Reference: development/api.md
-      - TypeScript Guide: development/typescript.md
-  - Deployment:
-      - Docker: deployment/docker.md
-      - Production: deployment/production.md
