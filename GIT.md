@@ -26,18 +26,18 @@ The fork-based workflow is used for contributing to organization repositories be
 
 ### 1. Fork the Repository
 
-1. Navigate to the organization repository: `https://github.com/remiboivin021/web-template`
+1. Navigate to the organization repository: `https://github.com/codesphere-dev/web-template`
 2. Click the **Fork** button in the top-right corner
 3. Select your personal account as the destination
 4. Wait for GitHub to create your fork
 
 ### 2. Clone Your Fork Locally
 
-Clone **your fork** (not the organization repository):
+Clone **your fork** (not the organization repository) using SSH:
 
 ```bash
 # Replace YOUR_USERNAME with your GitHub username
-git clone https://github.com/YOUR_USERNAME/web-template.git
+git clone git@github.com:YOUR_USERNAME/web-template.git
 cd web-template
 ```
 
@@ -55,15 +55,15 @@ git remote -v
 # origin  https://github.com/YOUR_USERNAME/web-template.git (push)
 
 # Add upstream pointing to the organization repository
-git remote add upstream https://github.com/remiboivin021/web-template.git
+git remote add upstream git@github.com:codesphere-dev/web-template.git
 
 # Verify both remotes
 git remote -v
 # Should now show:
-# origin    https://github.com/YOUR_USERNAME/web-template.git (fetch)
-# origin    https://github.com/YOUR_USERNAME/web-template.git (push)
-# upstream  https://github.com/remiboivin021/web-template.git (fetch)
-# upstream  https://github.com/remiboivin021/web-template.git (push)
+# origin    git@github.com:YOUR_USERNAME/web-template.git (fetch)
+# origin    git@github.com:YOUR_USERNAME/web-template.git (push)
+# upstream  git@github.com:codesphere-dev/web-template.git (fetch)
+# upstream  git@github.com:codesphere-dev/web-template.git (push)
 ```
 
 ### 4. Configure Git User
@@ -100,16 +100,20 @@ git push origin main
 1. **Create a feature branch** from the updated main:
 
 ```bash
-git checkout -b feat/your-feature-name
+# Branch naming format: type/#issue_id-issue-title
+# Example: feat/#42-add-user-authentication
+git checkout -b feat/#issue_id-issue-title
 ```
 
 Branch naming conventions:
-- `feat/feature-name` - New features
-- `fix/bug-name` - Bug fixes
-- `docs/description` - Documentation changes
-- `refactor/component-name` - Code refactoring
-- `test/description` - Test additions/updates
-- `chore/description` - Maintenance tasks
+- `feat/#id-title` - New features (e.g., `feat/#42-add-user-authentication`)
+- `fix/#id-title` - Bug fixes (e.g., `fix/#15-login-button-alignment`)
+- `docs/#id-title` - Documentation changes
+- `refactor/#id-title` - Code refactoring
+- `test/#id-title` - Test additions/updates
+- `chore/#id-title` - Maintenance tasks
+
+**Important**: The branch name must include the GitHub issue ID and use the issue title from the repository.
 
 2. **Make your changes** following the guidelines in [CONTRIBUTING.md](./CONTRIBUTING.md)
 
@@ -129,7 +133,8 @@ Testing: Describe tests added or N/A"
 4. **Push to your fork**:
 
 ```bash
-git push origin feat/your-feature-name
+# Example: git push origin feat/#42-add-user-authentication
+git push origin feat/#issue_id-issue-title
 ```
 
 Note: You're pushing to `origin` (your fork), not `upstream` (organization repo).
@@ -215,9 +220,10 @@ git push origin feat/your-feature-name
 1. Navigate to your fork: `https://github.com/YOUR_USERNAME/web-template`
 2. GitHub will show a yellow banner suggesting to create a PR
 3. Click **"Compare & pull request"**
-4. **Base repository**: `remiboivin021/web-template` (organization repo)
+4. **Base repository**: `codesphere-dev/web-template` (organization repo)
 5. **Base branch**: `main`
 6. **Head repository**: `YOUR_USERNAME/web-template` (your fork)
+7. **Compare branch**: `feat/#issue_id-issue-title`
 7. **Compare branch**: `feat/your-feature-name`
 
 ### 3. Fill PR Details
@@ -225,33 +231,6 @@ git push origin feat/your-feature-name
 **Title**: Use the same format as commit messages
 ```
 type(scope): description [WRCx]
-```
-
-**Description**: Include:
-```markdown
-## Summary
-Brief overview of changes
-
-## Motivation
-Why is this change needed?
-
-## Changes
-- Added new component X
-- Modified hook Y
-- Updated tests for Z
-
-## Testing
-- [ ] Unit tests pass
-- [ ] Manual testing completed
-- [ ] Linting passes
-- [ ] Build succeeds
-
-## Screenshots
-(If UI changes, include before/after screenshots)
-
-## Related Issues
-Closes #123
-Related to #456
 ```
 
 ### 4. Request Review
@@ -267,12 +246,18 @@ When reviewers suggest changes:
 
 ```bash
 # 1. Make the requested changes
-# 2. Commit with descriptive message
+# 2. Commit with the same format as new features (type(scope): description [WRCx])
 git add .
-git commit -m "fix(scope): address review feedback"
+git commit -m "fix(scope): address review feedback [WRCx]
+
+WHY: Explain why this change addresses the feedback
+WHAT: List changes made based on review
+Performance Impact: Describe impact or N/A
+Accessibility: Describe improvements or N/A
+Testing: Describe tests updated or N/A"
 
 # 3. Push to your fork (updates the PR automatically)
-git push origin feat/your-feature-name
+git push origin feat/#issue_id-issue-title
 ```
 
 ### 6. After PR is Merged
@@ -285,16 +270,16 @@ git checkout main
 
 # 2. Pull the merged changes from upstream
 git fetch upstream
-git merge upstream/main
+git rebase upstream/main
 
 # 3. Push updated main to your fork
 git push origin main
 
 # 4. Delete the feature branch locally
-git branch -d feat/your-feature-name
+git branch -d feat/#issue_id-issue-title
 
 # 5. Delete the feature branch from your fork
-git push origin --delete feat/your-feature-name
+git push origin --delete feat/#issue_id-issue-title
 ```
 
 ## Keeping Your Fork in Sync
@@ -310,8 +295,8 @@ git fetch upstream
 # Switch to main
 git checkout main
 
-# Merge upstream changes
-git merge upstream/main
+# Rebase on upstream changes
+git rebase upstream/main
 
 # Push to your fork
 git push origin main
@@ -337,7 +322,7 @@ You can use GitHub's "Fetch upstream" feature:
 # When syncing main, if conflicts occur:
 git fetch upstream
 git checkout main
-git merge upstream/main
+git rebase upstream/main
 
 # If conflicts are reported:
 # 1. Open conflicted files and resolve conflicts
@@ -345,7 +330,7 @@ git merge upstream/main
 # 3. Edit to keep the correct code
 # 4. Mark as resolved:
 git add .
-git commit -m "chore: merge upstream changes"
+git rebase --continue
 git push origin main
 ```
 
@@ -353,7 +338,7 @@ git push origin main
 
 ```bash
 # 1. Create a feature branch from current main
-git branch feat/your-feature-name
+git branch feat/#issue_id-issue-title
 
 # 2. Reset main to upstream
 git checkout main
@@ -363,7 +348,7 @@ git reset --hard upstream/main
 git push origin main --force-with-lease
 
 # 4. Switch to feature branch and continue work
-git checkout feat/your-feature-name
+git checkout feat/#issue_id-issue-title
 ```
 
 ### Scenario 3: Need to Update PR Branch
@@ -374,11 +359,11 @@ git checkout feat/your-feature-name
 # 1. Sync main first
 git checkout main
 git fetch upstream
-git merge upstream/main
+git rebase upstream/main
 git push origin main
 
 # 2. Update your feature branch
-git checkout feat/your-feature-name
+git checkout feat/#issue_id-issue-title
 git rebase main
 
 # 3. If conflicts, resolve and continue
@@ -386,7 +371,7 @@ git add .
 git rebase --continue
 
 # 4. Force push to update PR
-git push origin feat/your-feature-name --force-with-lease
+git push origin feat/#issue_id-issue-title --force-with-lease
 ```
 
 ### Scenario 4: Multiple Commits Need Squashing
@@ -402,7 +387,7 @@ git rebase -i HEAD~3
 
 # Edit the commit message as desired
 # Force push:
-git push origin feat/your-feature-name --force-with-lease
+git push origin feat/#issue_id-issue-title --force-with-lease
 ```
 
 ## Best Practices
@@ -492,10 +477,10 @@ You're trying to push to upstream (organization repo). Push to origin (your fork
 
 ```bash
 # Wrong:
-git push upstream feat/my-feature  ❌
+git push upstream feat/#42-add-user-authentication  ❌
 
 # Correct:
-git push origin feat/my-feature  ✅
+git push origin feat/#42-add-user-authentication  ✅
 ```
 
 ### Fork is behind upstream
@@ -505,7 +490,7 @@ Simply sync your fork:
 ```bash
 git fetch upstream
 git checkout main
-git merge upstream/main
+git rebase upstream/main
 git push origin main
 ```
 
@@ -515,10 +500,10 @@ Your branch and remote have diverged:
 
 ```bash
 # Option 1: Pull with rebase (if you haven't shared the branch)
-git pull --rebase origin feat/my-feature
+git pull --rebase origin feat/#issue_id-issue-title
 
 # Option 2: Force push if you've rebased (use with caution)
-git push origin feat/my-feature --force-with-lease
+git push origin feat/#issue_id-issue-title --force-with-lease
 ```
 
 ## Summary
@@ -537,29 +522,29 @@ git push origin feat/my-feature --force-with-lease
 
 ```bash
 # Setup (one-time)
-git clone https://github.com/YOUR_USERNAME/web-template.git
+git clone git@github.com:YOUR_USERNAME/web-template.git
 cd web-template
-git remote add upstream https://github.com/remiboivin021/web-template.git
+git remote add upstream git@github.com:codesphere-dev/web-template.git
 
 # Daily workflow
 git checkout main
 git fetch upstream
-git merge upstream/main
+git rebase upstream/main
 git push origin main
-git checkout -b feat/my-feature
+git checkout -b feat/#42-add-user-authentication
 # ... make changes ...
 git add .
 git commit -m "feat(scope): description [WRCx]"
-git push origin feat/my-feature
+git push origin feat/#42-add-user-authentication
 # ... create PR on GitHub ...
 
 # After PR merged
 git checkout main
 git fetch upstream
-git merge upstream/main
+git rebase upstream/main
 git push origin main
-git branch -d feat/my-feature
-git push origin --delete feat/my-feature
+git branch -d feat/#42-add-user-authentication
+git push origin --delete feat/#42-add-user-authentication
 ```
 
 Happy contributing! 🚀

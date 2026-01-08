@@ -1,11 +1,12 @@
 # Development Guide
 
-This guide covers the development setup, workflow, and best practices for working on this TypeScript web project.
+This guide covers the development setup, workflow, and best practices for working on this TypeScript web project using Docker.
 
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
 - [Initial Setup](#initial-setup)
+- [Docker Development Environment](#docker-development-environment)
 - [Project Structure](#project-structure)
 - [Development Workflow](#development-workflow)
 - [Building and Testing](#building-and-testing)
@@ -16,10 +17,12 @@ This guide covers the development setup, workflow, and best practices for workin
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js**: Version 18.x or higher (LTS recommended)
-- **npm**: Version 9.x or higher (comes with Node.js)
+- **Docker**: Version 20.x or higher
+- **Docker Compose**: Version 2.x or higher
 - **Git**: Version 2.x or higher
 - **Code Editor**: VS Code recommended with the following extensions:
+  - Docker
+  - Dev Containers (Remote - Containers)
   - ESLint
   - Prettier
   - TypeScript and JavaScript Language Features
@@ -28,9 +31,9 @@ Before you begin, ensure you have the following installed:
 ### Verify Installation
 
 ```bash
-node --version  # Should be v18.x or higher
-npm --version   # Should be v9.x or higher
-git --version   # Should be v2.x or higher
+docker --version          # Should be 20.x or higher
+docker compose version    # Should be v2.x or higher
+git --version            # Should be v2.x or higher
 ```
 
 ## Initial Setup
@@ -39,16 +42,7 @@ git --version   # Should be v2.x or higher
 
 Follow the instructions in [GIT.md](./GIT.md) to fork the repository and clone it locally.
 
-### 2. Install Dependencies
-
-```bash
-cd web-template
-npm install
-```
-
-This will install all project dependencies defined in `package.json`.
-
-### 3. Environment Configuration
+### 2. Environment Configuration
 
 If the project requires environment variables, copy the example file:
 
@@ -58,15 +52,91 @@ cp .env.example .env
 
 Edit `.env` and configure the necessary values for your local environment.
 
-### 4. Verify Setup
-
-Run the development server to ensure everything is working:
+### 3. Build and Start Docker Containers
 
 ```bash
-npm run dev
+# Build the Docker images
+docker compose build
+
+# Start the development environment
+docker compose up -d
+
+# View logs
+docker compose logs -f
 ```
 
-The application should start and be accessible at `http://localhost:5173` (or the port specified in the console).
+The application should start and be accessible at `http://localhost:3000` (or the port specified in `docker-compose.yml`).
+
+### 4. Verify Setup
+
+Check that all containers are running:
+
+```bash
+docker compose ps
+```
+
+You should see the containers running (web, database, etc.).
+
+## Docker Development Environment
+
+### Docker Compose Services
+
+The `docker-compose.yml` file defines the following services:
+
+- **web**: The main TypeScript/React application
+- **db**: PostgreSQL database (if applicable)
+- **redis**: Redis cache (if applicable)
+
+### Starting and Stopping
+
+```bash
+# Start all services
+docker compose up -d
+
+# Start specific service
+docker compose up -d web
+
+# Stop all services
+docker compose down
+
+# Stop and remove volumes (clean slate)
+docker compose down -v
+
+# Restart a service
+docker compose restart web
+```
+
+### Accessing Container Shell
+
+```bash
+# Access the web container shell
+docker compose exec web sh
+
+# Run commands inside the container
+docker compose exec web npm run lint
+docker compose exec web npm run test
+```
+
+### Installing Dependencies
+
+When adding new npm packages:
+
+```bash
+# Install inside the running container
+docker compose exec web npm install <package-name>
+
+# Or rebuild the image
+docker compose build web
+docker compose up -d web
+```
+
+### Hot Reload
+
+The Docker development environment is configured with volume mounts for hot reload:
+
+- Code changes are automatically detected
+- The application reloads without restarting the container
+- Node modules are persisted in a Docker volume for performance
 
 ## Project Structure
 
@@ -111,33 +181,42 @@ web-template/
    ```bash
    git fetch upstream
    git checkout main
-   git merge upstream/main
+   git rebase upstream/main
    ```
 
-2. **Create a feature branch**:
+2. **Create a feature branch** (see [GIT.md](./GIT.md) for branch naming):
    ```bash
-   git checkout -b feat/your-feature-name
+   git checkout -b feat/#issue_id-issue-title
    ```
 
-3. **Make changes** following the code guidelines in [CONTRIBUTING.md](./CONTRIBUTING.md)
-
-4. **Test your changes** frequently:
+3. **Start Docker environment**:
    ```bash
-   npm run lint     # Check code style
-   npm run build    # Ensure it builds
-   npm run test     # Run tests
+   docker compose up -d
    ```
 
-5. **Commit with proper format** (see CONTRIBUTING.md for commit message guidelines)
+4. **Make changes** following the code guidelines in [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-6. **Push to your fork** and create a pull request (see [GIT.md](./GIT.md))
+5. **Test your changes** frequently:
+   ```bash
+   docker compose exec web npm run lint     # Check code style
+   docker compose exec web npm run build    # Ensure it builds
+   docker compose exec web npm run test     # Run tests
+   ```
+
+6. **Commit with proper format** (see CONTRIBUTING.md for commit message guidelines)
+
+7. **Push to your fork** and create a pull request (see [GIT.md](./GIT.md))
 
 ### Hot Reload Development
 
-The development server supports hot module replacement (HMR):
+The Docker development environment supports hot module replacement (HMR):
 
 ```bash
-npm run dev
+# Start the dev environment
+docker compose up -d
+
+# View logs in real-time
+docker compose logs -f web
 ```
 
 Changes to your code will automatically reload in the browser without losing application state.
@@ -147,7 +226,7 @@ Changes to your code will automatically reload in the browser without losing app
 TypeScript is configured with strict mode. Always run type checking:
 
 ```bash
-npm run type-check
+docker compose exec web npm run type-check
 ```
 
 Fix all type errors before committing. Never use `any` or `@ts-ignore` without proper justification.
@@ -157,15 +236,20 @@ Fix all type errors before committing. Never use `any` or `@ts-ignore` without p
 ### Development Build
 
 ```bash
-npm run dev
+# Using Docker (recommended)
+docker compose up -d
 ```
 
-Starts the development server with hot reload.
+The development server starts with hot reload inside the container.
 
 ### Production Build
 
 ```bash
-npm run build
+# Build inside Docker container
+docker compose exec web npm run build
+
+# Or build a production Docker image
+docker compose -f docker-compose.prod.yml build
 ```
 
 Creates an optimized production build in the `dist/` directory.
@@ -173,7 +257,7 @@ Creates an optimized production build in the `dist/` directory.
 ### Preview Production Build
 
 ```bash
-npm run preview
+docker compose exec web npm run preview
 ```
 
 Serves the production build locally for testing before deployment.
@@ -182,13 +266,13 @@ Serves the production build locally for testing before deployment.
 
 ```bash
 # Run all tests
-npm run test
+docker compose exec web npm run test
 
 # Run tests in watch mode (for TDD)
-npm run test:watch
+docker compose exec web npm run test:watch
 
 # Run tests with coverage report
-npm run test:coverage
+docker compose exec web npm run test:coverage
 ```
 
 ### Test Coverage
@@ -196,7 +280,10 @@ npm run test:coverage
 Aim to maintain at least 80% code coverage. View the coverage report:
 
 ```bash
-npm run test:coverage
+docker compose exec web npm run test:coverage
+
+# Copy coverage report to host (if needed)
+docker compose cp web:/app/coverage ./coverage
 open coverage/index.html  # macOS
 xdg-open coverage/index.html  # Linux
 start coverage/index.html  # Windows
@@ -210,10 +297,10 @@ The project uses ESLint for code quality:
 
 ```bash
 # Check for linting errors
-npm run lint
+docker compose exec web npm run lint
 
 # Auto-fix linting errors
-npm run lint:fix
+docker compose exec web npm run lint:fix
 ```
 
 ### Code Formatting
@@ -222,10 +309,10 @@ Prettier is configured for consistent code formatting:
 
 ```bash
 # Check formatting
-npm run format:check
+docker compose exec web npm run format:check
 
 # Auto-format code
-npm run format
+docker compose exec web npm run format
 ```
 
 ### Pre-commit Hooks
@@ -240,7 +327,7 @@ If pre-commit hooks fail, fix the issues before committing.
 
 ### Editor Configuration
 
-For VS Code, add these settings to `.vscode/settings.json`:
+For VS Code with Docker, add these settings to `.vscode/settings.json`:
 
 ```json
 {
@@ -258,33 +345,56 @@ For VS Code, add these settings to `.vscode/settings.json`:
 
 ### Common Issues
 
-#### Node Modules Issues
+#### Docker Container Issues
 
-If you encounter dependency issues:
+If containers fail to start or behave unexpectedly:
 
 ```bash
-rm -rf node_modules package-lock.json
-npm install
+# Check container status
+docker compose ps
+
+# View logs
+docker compose logs web
+
+# Restart containers
+docker compose restart
+
+# Full rebuild (clean slate)
+docker compose down -v
+docker compose build --no-cache
+docker compose up -d
+```
+
+#### Dependency Issues
+
+If you encounter dependency issues inside the container:
+
+```bash
+# Rebuild the container with fresh dependencies
+docker compose down
+docker compose build --no-cache web
+docker compose up -d
 ```
 
 #### Port Already in Use
 
-If the development server port is occupied:
+If the Docker port is occupied:
 
 ```bash
-# Kill the process using the port (example for port 5173)
-# macOS/Linux:
-lsof -ti:5173 | xargs kill -9
+# Check what's using the port
+lsof -i :3000  # macOS/Linux
+netstat -ano | findstr :3000  # Windows
 
-# Windows:
-netstat -ano | findstr :5173
-taskkill /PID <PID> /F
+# Stop the conflicting service or change the port in docker-compose.yml
 ```
 
-Or specify a different port:
+Or modify the port mapping in `docker-compose.yml`:
 
-```bash
-npm run dev -- --port 3000
+```yaml
+services:
+  web:
+    ports:
+      - "3001:3000"  # Change host port to 3001
 ```
 
 #### TypeScript Errors
@@ -292,11 +402,12 @@ npm run dev -- --port 3000
 If you see unexpected TypeScript errors:
 
 ```bash
-# Restart the TypeScript server in VS Code
-# Command Palette (Ctrl+Shift+P / Cmd+Shift+P) -> "TypeScript: Restart TS Server"
+# Restart the container
+docker compose restart web
 
-# Or delete TypeScript cache
-rm -rf node_modules/.cache
+# Or clear cache inside container
+docker compose exec web rm -rf node_modules/.cache
+docker compose restart web
 ```
 
 #### Build Fails
@@ -307,15 +418,29 @@ If the build fails:
 2. Check for missing dependencies
 3. Clear cache and rebuild:
    ```bash
-   npm run clean  # If available
-   npm run build
+   docker compose down
+   docker compose build --no-cache
+   docker compose up -d
    ```
+
+#### Volume Permission Issues
+
+On Linux, if you encounter permission issues:
+
+```bash
+# Fix permissions
+sudo chown -R $USER:$USER .
+
+# Or run containers with your user ID
+# Add to docker-compose.yml:
+# user: "${UID}:${GID}"
+```
 
 ### Getting Help
 
 If you encounter issues not covered here:
 
-1. Check existing [issues](https://github.com/remiboivin021/web-template/issues)
+1. Check existing [issues](https://github.com/codesphere-dev/web-template/issues)
 2. Review [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines
 3. Ask questions in a new issue with the `question` label
 
@@ -326,7 +451,7 @@ If you encounter issues not covered here:
 Analyze what's in your production bundle:
 
 ```bash
-npm run build -- --report
+docker compose exec web npm run build -- --report
 ```
 
 ### React DevTools Profiler

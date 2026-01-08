@@ -13,7 +13,7 @@ Thank you for your interest in contributing to this TypeScript web project! This
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by our commitment to creating a welcoming and inclusive environment. Please be respectful and professional in all interactions.
+This project and everyone participating in it is governed by our [Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please read the full text to understand what actions will and will not be tolerated.
 
 ## How Can I Contribute?
 
