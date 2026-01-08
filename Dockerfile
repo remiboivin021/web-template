@@ -12,8 +12,8 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Build the application
-RUN ./node_modules/.bin/tsc && ./node_modules/.bin/vite build
+# Build the application (server with TypeScript, client with Vite)
+RUN ./node_modules/.bin/tsc -p tsconfig.server.json && ./node_modules/.bin/vite build
 
 # Production stage
 FROM node:20-alpine AS production
