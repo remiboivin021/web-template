@@ -58,7 +58,7 @@ export function sleep(ms: number): Promise<void> {
 export function get<T>(obj: Record<string, unknown>, path: string, defaultValue?: T): T {
   const keys = path.split('.');
   let result: unknown = obj;
-  
+
   for (const key of keys) {
     if (result && typeof result === 'object' && key in result) {
       result = (result as Record<string, unknown>)[key];
@@ -66,7 +66,7 @@ export function get<T>(obj: Record<string, unknown>, path: string, defaultValue?
       return defaultValue as T;
     }
   }
-  
+
   return result as T;
 }
 

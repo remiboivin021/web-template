@@ -19,7 +19,7 @@ interface UIState {
   theme: Theme;
   sidebarOpen: boolean;
   toasts: Toast[];
-  
+
   // Actions
   setTheme: (theme: Theme) => void;
   toggleSidebar: () => void;
@@ -50,7 +50,7 @@ export const useUIStore = create<UIState>()(
         },
 
         toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
-        
+
         setSidebarOpen: (open) => set({ sidebarOpen: open }),
 
         addToast: (toast) =>

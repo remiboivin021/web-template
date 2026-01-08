@@ -10,12 +10,18 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Loading } from '@/components/Loading';
 
 // Lazy load pages for code splitting
-const HomePage = lazy(() => import('@/pages/Home').then(m => ({ default: m.HomePage })));
-const AboutPage = lazy(() => import('@/pages/About').then(m => ({ default: m.AboutPage })));
-const LoginPage = lazy(() => import('@/pages/Login').then(m => ({ default: m.LoginPage })));
-const RegisterPage = lazy(() => import('@/pages/Register').then(m => ({ default: m.RegisterPage })));
-const DashboardPage = lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.DashboardPage })));
-const NotFoundPage = lazy(() => import('@/pages/NotFound').then(m => ({ default: m.NotFoundPage })));
+const HomePage = lazy(() => import('@/pages/Home').then((m) => ({ default: m.HomePage })));
+const AboutPage = lazy(() => import('@/pages/About').then((m) => ({ default: m.AboutPage })));
+const LoginPage = lazy(() => import('@/pages/Login').then((m) => ({ default: m.LoginPage })));
+const RegisterPage = lazy(() =>
+  import('@/pages/Register').then((m) => ({ default: m.RegisterPage }))
+);
+const DashboardPage = lazy(() =>
+  import('@/pages/Dashboard').then((m) => ({ default: m.DashboardPage }))
+);
+const NotFoundPage = lazy(() =>
+  import('@/pages/NotFound').then((m) => ({ default: m.NotFoundPage }))
+);
 
 export const AppRouter: React.FC = () => {
   return (

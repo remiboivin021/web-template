@@ -16,10 +16,10 @@ describe('Button', () => {
   it('calls onClick when clicked', async () => {
     const handleClick = vi.fn();
     const user = userEvent.setup();
-    
+
     render(<Button onClick={handleClick}>Click me</Button>);
     await user.click(screen.getByText('Click me'));
-    
+
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 

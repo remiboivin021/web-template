@@ -37,13 +37,15 @@ export class ErrorBoundary extends Component<Props, State> {
   override render() {
     if (this.state.hasError) {
       return (
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          minHeight: '100vh',
-          padding: '2rem'
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '100vh',
+            padding: '2rem',
+          }}
+        >
           <Card style={{ maxWidth: '600px', textAlign: 'center' }}>
             <h1 style={{ color: 'var(--color-error)', marginBottom: '1rem' }}>
               Something went wrong

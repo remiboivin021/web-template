@@ -24,7 +24,7 @@ export function useForm<T extends Record<string, unknown>>({
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setValues((prev) => ({ ...prev, [name]: value }));
-    
+
     // Clear error when user starts typing
     if (errors[name as keyof T]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
@@ -45,7 +45,7 @@ export function useForm<T extends Record<string, unknown>>({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Mark all fields as touched
     const allTouched = Object.keys(values).reduce(
       (acc, key) => ({ ...acc, [key]: true }),
@@ -57,7 +57,7 @@ export function useForm<T extends Record<string, unknown>>({
     if (validate) {
       const validationErrors = validate(values);
       setErrors(validationErrors);
-      
+
       if (Object.keys(validationErrors).length > 0) {
         return;
       }
