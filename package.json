@@ -2,7 +2,7 @@
   "name": "web-template",
   "version": "1.0.0",
   "description": "TypeScript web application template with PostgreSQL",
-  "main": "dist/index.js",
+  "main": "dist/server/index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc -p tsconfig.server.json && vite build",
