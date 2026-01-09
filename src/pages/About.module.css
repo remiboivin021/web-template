@@ -1,0 +1,39 @@
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.section h2 {
+  margin-bottom: var(--spacing-md);
+  color: var(--color-primary);
+}
+
+.section p {
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.list {
+  list-style: disc;
+  padding-left: var(--spacing-xl);
+}
+
+.list li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.list li strong {
+  color: var(--color-text);
+}
