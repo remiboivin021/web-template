@@ -1,0 +1,74 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Container Diagram for E-Commerce Platform
+
+Person(customer, "Customer", "A customer using the platform")
+Person(admin, "Administrator", "Internal staff member")
+
+System_Boundary(ecommerce, "E-Commerce Platform") {
+    Container(webApp, "Web Application", "React, TypeScript", "Provides e-commerce functionality to customers via their web browser")
+    Container(mobileApp, "Mobile Application", "React Native", "Provides e-commerce functionality via iOS and Android")
+    Container(adminApp, "Admin Portal", "React, TypeScript", "Provides admin interface for managing the platform")
+    
+    Container(apiGateway, "API Gateway", "Kong/AWS API Gateway", "Routes requests, handles auth, rate limiting")
+    
+    Container(productService, "Product Service", "Node.js, Express", "Manages product catalog, search, and recommendations")
+    Container(orderService, "Order Service", "Node.js, Express", "Handles order processing and fulfillment")
+    Container(userService, "User Service", "Node.js, Express", "Manages user accounts and authentication")
+    Container(paymentService, "Payment Service", "Node.js, Express", "Processes payments securely")
+    
+    ContainerDb(productDb, "Product Database", "PostgreSQL", "Stores product information, categories, inventory")
+    ContainerDb(orderDb, "Order Database", "PostgreSQL", "Stores order data, transactions")
+    ContainerDb(userDb, "User Database", "PostgreSQL", "Stores user profiles, credentials, preferences")
+    
+    Container(searchEngine, "Search Engine", "Elasticsearch", "Provides fast product search and filtering")
+    Container(cache, "Cache", "Redis", "Stores session data, frequently accessed data")
+    Container(messageQueue, "Message Queue", "RabbitMQ/AWS SQS", "Handles asynchronous processing")
+    Container(objectStorage, "Object Storage", "AWS S3", "Stores product images and assets")
+}
+
+System_Ext(paymentGateway, "Payment Gateway", "Stripe/PayPal")
+System_Ext(shippingService, "Shipping Service", "FedEx/UPS API")
+System_Ext(emailService, "Email Service", "SendGrid")
+
+' User interactions
+Rel(customer, webApp, "Uses", "HTTPS")
+Rel(customer, mobileApp, "Uses", "HTTPS")
+Rel(admin, adminApp, "Uses", "HTTPS")
+
+' Frontend to API Gateway
+Rel(webApp, apiGateway, "Makes API calls", "HTTPS/JSON")
+Rel(mobileApp, apiGateway, "Makes API calls", "HTTPS/JSON")
+Rel(adminApp, apiGateway, "Makes API calls", "HTTPS/JSON")
+
+' API Gateway to Services
+Rel(apiGateway, productService, "Routes to", "HTTP/REST")
+Rel(apiGateway, orderService, "Routes to", "HTTP/REST")
+Rel(apiGateway, userService, "Routes to", "HTTP/REST")
+Rel(apiGateway, paymentService, "Routes to", "HTTP/REST")
+
+' Services to Databases
+Rel(productService, productDb, "Reads/Writes", "SQL/TCP")
+Rel(orderService, orderDb, "Reads/Writes", "SQL/TCP")
+Rel(userService, userDb, "Reads/Writes", "SQL/TCP")
+
+' Services to Infrastructure
+Rel(productService, searchEngine, "Indexes/Queries", "HTTP/REST")
+Rel(productService, cache, "Reads/Writes", "Redis Protocol")
+Rel(orderService, cache, "Reads/Writes", "Redis Protocol")
+Rel(userService, cache, "Reads/Writes", "Redis Protocol")
+Rel(productService, objectStorage, "Stores/Retrieves images", "S3 API")
+
+' Async communication
+Rel(orderService, messageQueue, "Publishes order events", "AMQP")
+Rel(paymentService, messageQueue, "Subscribes to payment events", "AMQP")
+
+' External integrations
+Rel(paymentService, paymentGateway, "Processes payments", "HTTPS/REST")
+Rel(orderService, shippingService, "Creates shipments", "HTTPS/REST")
+Rel(orderService, emailService, "Sends notifications", "HTTPS/REST")
+
+@enduml
