@@ -5,9 +5,11 @@
 
 import "reflect-metadata";
 import { setupContainer } from "./infrastructure/di/container";
+import { Server } from "./infrastructure/http/Server";
 
 // Setup dependency injection
 setupContainer();
 
-// TODO: Start your HTTP server here
-console.log("Server starting...");
+// Start HTTP server
+const server = new Server();
+server.start();

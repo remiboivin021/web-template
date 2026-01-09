@@ -1,0 +1,1 @@
+{"version":3,"file":"logger.d.ts","sourceRoot":"","sources":["../../../../src/infrastructure/http/middleware/logger.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAE1D,wBAAgB,MAAM,CAAC,GAAG,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ,EAAE,IAAI,EAAE,YAAY,GAAG,IAAI,CAS5E"}
