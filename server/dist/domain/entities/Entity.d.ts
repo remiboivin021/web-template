@@ -60,7 +60,7 @@ export declare abstract class Entity<T extends EntityId> {
      * @param other The entity to compare with
      * @returns {boolean} True if both entities have the same ID
      */
-    equals(other: Entity<EntityId>): boolean;
+    equals(other: Entity<T>): boolean;
     /**
      * @brief Returns a string representation of the entity
      * @returns {string} String representation including entity type and ID

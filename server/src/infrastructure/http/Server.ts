@@ -63,10 +63,11 @@ export class Server {
    * @brief Start the server
    */
   public start(): void {
-    this.app.listen(this.port, () => {
-      console.log(`Server running on http://${this.host}:${this.port}`);
+    const port = typeof this.port === 'string' ? parseInt(this.port, 10) : this.port;
+    this.app.listen(port, () => {
+      console.log(`Server running on http://${this.host}:${port}`);
       console.log(`Environment: ${serverConfig.env}`);
-      console.log(`Health check: http://${this.host}:${this.port}/health`);
+      console.log(`Health check: http://${this.host}:${port}/health`);
     });
   }
 

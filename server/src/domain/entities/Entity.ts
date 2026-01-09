@@ -82,7 +82,7 @@ export abstract class Entity<T extends EntityId> {
      * @param other The entity to compare with
      * @returns {boolean} True if both entities have the same ID
      */
-    public equals(other: Entity<EntityId>): boolean {
+    public equals(other: Entity<T>): boolean {
         if (!(other instanceof Entity)) {
             return false;
         }
@@ -91,7 +91,7 @@ export abstract class Entity<T extends EntityId> {
             return true;
         }
 
-        return this._id === other._id;
+        return this._id.equals(other._id);
     }
 
     /**

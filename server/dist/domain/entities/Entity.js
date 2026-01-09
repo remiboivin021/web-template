@@ -66,7 +66,7 @@ class Entity {
         if (this === other) {
             return true;
         }
-        return this._id === other._id;
+        return this._id.equals(other._id);
     }
     /**
      * @brief Returns a string representation of the entity
