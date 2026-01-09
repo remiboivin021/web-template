@@ -8,8 +8,9 @@ import { container } from "tsyringe";
 import { TYPES } from "./types";
 
 // Import implementations
-import { UserRepository } from "../persistence/repositories/UserRepository";
-import { IUserRepository } from "../../application/ports/outbound/IUserRepository";
+// TODO: Uncomment when repositories are implemented
+// import { UserRepository } from "../repositories/UserRepository";
+// import { IUserRepository } from "../../domain/services/IUserRepository";
 
 /**
  * @function setupContainer
@@ -17,9 +18,10 @@ import { IUserRepository } from "../../application/ports/outbound/IUserRepositor
  */
 export function setupContainer(): void {
   // Register Repositories
-  container.register<IUserRepository>(TYPES.IUserRepository, {
-    useClass: UserRepository,
-  });
+  // TODO: Uncomment when repositories are implemented
+  // container.register<IUserRepository>(TYPES.IUserRepository, {
+  //   useClass: UserRepository,
+  // });
 
   // Add more registrations as needed
 }

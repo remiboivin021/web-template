@@ -9,18 +9,20 @@ exports.setupContainer = setupContainer;
 require("reflect-metadata");
 const tsyringe_1 = require("tsyringe");
 Object.defineProperty(exports, "container", { enumerable: true, get: function () { return tsyringe_1.container; } });
-const types_1 = require("./types");
 // Import implementations
-const UserRepository_1 = require("../persistence/repositories/UserRepository");
+// TODO: Uncomment when repositories are implemented
+// import { UserRepository } from "../repositories/UserRepository";
+// import { IUserRepository } from "../../domain/services/IUserRepository";
 /**
  * @function setupContainer
  * @brief Configures all dependency bindings
  */
 function setupContainer() {
     // Register Repositories
-    tsyringe_1.container.register(types_1.TYPES.IUserRepository, {
-        useClass: UserRepository_1.UserRepository,
-    });
+    // TODO: Uncomment when repositories are implemented
+    // container.register<IUserRepository>(TYPES.IUserRepository, {
+    //   useClass: UserRepository,
+    // });
     // Add more registrations as needed
 }
 //# sourceMappingURL=container.js.map

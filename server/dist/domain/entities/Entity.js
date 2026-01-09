@@ -12,7 +12,7 @@ exports.Entity = void 0;
  * @brief Abstract base class for all domain entities
  * @description Provides common entity behavior including identity management and equality comparison.
  * Entities are distinguished by their unique identifier rather than their attributes.
- * @template EntityId The type of the entity's unique identifier
+ * @template T The type of the entity's unique identifier (must extend EntityId)
  */
 class Entity {
     /**
@@ -28,7 +28,7 @@ class Entity {
     }
     /**
      * @brief Gets the entity's unique identifier
-     * @returns {EntityId} The entity ID
+     * @returns {T} The entity ID
      */
     getId() {
         return this._id;

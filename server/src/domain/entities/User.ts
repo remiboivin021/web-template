@@ -134,7 +134,7 @@ export class User extends Entity<EntityId> {
      * @return {void}
      */
     public connect(): void {
-        this.connectionStatus = ConnectionStatus.connected(new Date());
+        this.connectionStatus = ConnectionStatus.connected();
     }
 
     /**

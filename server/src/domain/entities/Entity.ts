@@ -12,14 +12,14 @@ import { EntityId } from '../value_objects/EntityId';
  * @brief Abstract base class for all domain entities
  * @description Provides common entity behavior including identity management and equality comparison.
  * Entities are distinguished by their unique identifier rather than their attributes.
- * @template EntityId The type of the entity's unique identifier
+ * @template T The type of the entity's unique identifier (must extend EntityId)
  */
-export abstract class Entity<EntityId> {
+export abstract class Entity<T extends EntityId> {
     /**
      * @brief The unique identifier for this entity
      * @protected
      */
-    protected readonly _id: EntityId;
+    protected readonly _id: T;
 
     /**
      * @brief Timestamp when the entity was created
@@ -39,7 +39,7 @@ export abstract class Entity<EntityId> {
      * @param createdAt The creation timestamp
      * @param updatedAt The last update timestamp
      */
-    protected constructor(id: EntityId, createdAt: Date, updatedAt: Date) {
+    protected constructor(id: T, createdAt: Date, updatedAt: Date) {
         this._id = id;
         this._createdAt = createdAt;
         this._updatedAt = updatedAt;
@@ -47,9 +47,9 @@ export abstract class Entity<EntityId> {
 
     /**
      * @brief Gets the entity's unique identifier
-     * @returns {EntityId} The entity ID
+     * @returns {T} The entity ID
      */
-    public getId(): EntityId {
+    public getId(): T {
         return this._id;
     }
 

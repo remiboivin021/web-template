@@ -79,7 +79,7 @@ class User extends Entity_1.Entity {
      * @return {void}
      */
     connect() {
-        this.connectionStatus = ConnectionStatus_1.ConnectionStatus.connected(new Date());
+        this.connectionStatus = ConnectionStatus_1.ConnectionStatus.connected();
     }
     /**
      * @brief Marks the user as disconnected
