@@ -1,0 +1,43 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: web-template-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-webtemplate}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - web-template-network
+
+  # MkDocs Documentation
+  docs:
+    image: squidfunk/mkdocs-material:latest
+    container_name: web-template-docs-dev
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/docs
+    command: serve --dev-addr=0.0.0.0:8000
+    networks:
+      - web-template-network
+
+volumes:
+  postgres_data_dev:
+    driver: local
+
+networks:
+  web-template-network:
+    driver: bridge
