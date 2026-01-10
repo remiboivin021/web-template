@@ -1,0 +1,21 @@
+# Docker
+node_modules
+dist
+*.log
+
+# Git
+.git
+.gitignore
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode
+.idea
+
+# Tests
+coverage
+*.test.ts
+tests/
