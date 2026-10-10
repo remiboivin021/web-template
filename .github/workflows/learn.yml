@@ -23,9 +23,13 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_number: ${{ inputs.pr_number }}
+          openrouter_api_key: ${{ secrets.OPENROUTER_API_KEY }}
       - if: steps.extract.outputs.skipped != 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: pr-context-${{ github.event.pull_request.number || inputs.pr_number }}
-          path: context.json
+          name: pr-learning-${{ github.event.pull_request.number || inputs.pr_number }}
+          path: |
+            context.json
+            lessons.json
+          if-no-files-found: warn
           retention-days: 14
